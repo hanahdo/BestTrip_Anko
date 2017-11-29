@@ -1,0 +1,120 @@
+apply plugin: "com.android.application"
+
+apply plugin: "kotlin-android"
+
+apply plugin: "kotlin-android-extensions"
+
+apply plugin: "kotlin-kapt"
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "sg.vinova.besttripanko"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        debug {
+            storeFile file("../keystore.jks")
+            storePassword "123456"
+            keyAlias "besttrip"
+            keyPassword "123456"
+        }
+    }
+    sourceSets {
+        androidTest.java.srcDirs += "src/androidTest/kotlin"
+        debug.java.srcDirs += "src/debug/kotlin"
+        main.java.srcDirs += "src/main/kotlin"
+        test.java.srcDirs += "src/test/kotlin"
+    }
+
+    flavorDimensions version
+    productFlavors {
+        prod {
+            dimension version
+            applicationIdSuffix ".prod"
+            versionNameSuffix "-prod"
+        }
+        dev {
+            dimension version
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+            applicationIdSuffix ".debug"
+            resValue("string", "API_key", "AIzaSyBnLvgh2tH-5GYLlfRgOWaibr7TCdKNd_c")
+            buildConfigField("boolean", "isLog", 'true')
+            buildConfigField("String", "BASE_URL", '"https://maps.googleapis.com/maps/api/place/"')
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+            debuggable false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+            resValue("string", "API_key", "AIzaSyBnLvgh2tH-5GYLlfRgOWaibr7TCdKNd_c")
+            buildConfigField("boolean", "isLog", 'true')
+            buildConfigField("String", "BASE_URL", '"https://maps.googleapis.com/maps/api/place/"')
+            signingConfig signingConfigs.debug
+            applicationIdSuffix ".release"
+        }
+    }
+
+    kapt {
+        correctErrorTypes = true
+        generateStubs = true
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ["*.jar"], dir: "libs")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jre7:$kotlin_version"
+    implementation "com.android.support:appcompat-v7:27.0.1"
+    implementation "com.android.support.constraint:constraint-layout:1.0.2"
+    testImplementation "junit:junit:4.12"
+    androidTestImplementation "com.android.support.test:runner:1.0.1"
+    androidTestImplementation "com.android.support.test.espresso:espresso-core:3.0.1"
+    //Views
+    implementation "com.android.support:recyclerview-v7:27.0.1"
+    //Anko
+    implementation "org.jetbrains.anko:anko:$rootProject.ankoVersion"
+    // Dagger 2
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    //RxKotlin 2 + RxJava
+    implementation "com.github.ReactiveX:RxKotlin:2.x-SNAPSHOT"
+    implementation "io.reactivex.rxjava2:rxandroid:2.0.1"
+    implementation "io.reactivex.rxjava2:rxjava:2.1.6"
+    //Glide
+    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+    kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
+    //Retrofit
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofitVersion"
+    implementation "com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:3.6.0"
+    //Firebase
+    implementation "com.google.firebase:firebase-auth:$rootProject.firebaseVersion"
+    //Google Services
+    implementation "com.google.android.gms:play-services-maps:$rootProject.firebaseVersion"
+    implementation "com.google.android.gms:play-services-places:$rootProject.firebaseVersion"
+    implementation "com.google.android.gms:play-services-nearby:$rootProject.firebaseVersion"
+}
+
+
+apply plugin: "com.google.gms.google-services"
+kotlin {
+    experimental {
+        coroutines "enable"
+    }
+}

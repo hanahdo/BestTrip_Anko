@@ -1,0 +1,5 @@
+/build
+/release
+/src/test/java/
+/src/androidTest/java/
+/src/main/java/
