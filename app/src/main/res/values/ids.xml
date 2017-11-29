@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="layoutContainer" type="id" />
+    <item name="drawer" type="id" />
+    <item name="toolbar" type="id" />
+    <item name="fragmentContainer" type="id" />
+</resources>

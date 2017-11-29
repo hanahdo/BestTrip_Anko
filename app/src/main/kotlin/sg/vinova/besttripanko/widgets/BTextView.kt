@@ -2,40 +2,43 @@ package sg.vinova.besttripanko.widgets
 
 import android.content.Context
 import android.graphics.Typeface
-import android.util.AttributeSet
+import android.support.v4.content.ContextCompat
 import android.view.ViewManager
 import android.widget.TextView
 import org.jetbrains.anko.custom.ankoView
+import sg.vinova.besttripanko.R
 import sg.vinova.besttripanko.constants.Constant
-import java.util.*
 
 /**
  * Created by Hanah on 11/29/2017.
  */
-class BTextView : TextView {
-    constructor(context: Context?) : super(context) {
-        init()
+class BTextView(context: Context?) : TextView(context) {
+
+
+    private lateinit var fontFamily: String
+
+    fun bFont(bFont: Constant.TextType) {
+        fontFamily = when (bFont) {
+            Constant.TextType.Light -> resources.getString(R.string.roboto_light)
+            Constant.TextType.Bold -> resources.getString(R.string.roboto_bold)
+            Constant.TextType.Medium -> resources.getString(R.string.roboto_medium)
+            else -> resources.getString(R.string.roboto_regular)
+        }
+        typeface = Typeface.createFromAsset(context!!.assets, "fonts/$fontFamily")
     }
 
-    constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
-        init()
+    fun bTextColor(textColor: Int) {
+        setTextColor(ContextCompat.getColor(context, textColor))
     }
 
-    constructor(context: Context?, attrs: AttributeSet?, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        init()
-    }
-
-    public var bFont: String = Constant.TextType.Regular
-
-    private fun init() {
-        typeface = Typeface.createFromAsset(context.assets, String.format(Locale.US, "fonts/%s", bFont))
+    init {
+        if (context != null) {
+            typeface = Typeface.createFromAsset(context.assets, "fonts/roboto_regular.ttf")
+            setTextColor(ContextCompat.getColor(context, R.color.white))
+        }
     }
 }
 
-@Suppress("NOTHING_TO_INLINE")
-inline fun ViewManager.bTextView(theme: Int = 0) = bTextView(
-        init = {},
-        theme = theme
-)
+inline fun ViewManager.bTextView(theme: Int = 0) = bTextView(init = {}, theme = theme)
 
 inline fun ViewManager.bTextView(init: BTextView.() -> Unit, theme: Int = 0) = ankoView(::BTextView, theme, init)

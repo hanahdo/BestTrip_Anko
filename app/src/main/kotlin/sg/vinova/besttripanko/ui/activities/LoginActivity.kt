@@ -1,41 +1,57 @@
 package sg.vinova.besttripanko.ui.activities
 
 import android.os.Bundle
-import android.support.v4.content.ContextCompat
-import android.support.v7.app.AppCompatActivity
-import android.view.Gravity
 import android.view.View
+import android.widget.LinearLayout
 import org.jetbrains.anko.*
+import org.jetbrains.anko.support.v4.drawerLayout
 import sg.vinova.besttripanko.R
-import sg.vinova.besttripanko.constants.Constant
-import sg.vinova.besttripanko.widgets.bTextView
+import sg.vinova.besttripanko.base.BBaseActivity
+import sg.vinova.besttripanko.base.BBaseUi
+import sg.vinova.besttripanko.ui.fragments.SplashFragment
+import sg.vinova.besttripanko.widgets.bToolbar
 
 /**
  * Created by Hanah on 11/29/2017.
  */
-class LoginActivity : AppCompatActivity() {
+class LoginActivity : BBaseActivity() {
+    override fun replaceFragmentId(): Int = R.id.fragmentContainer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LoginActivityUi().setContentView(this)
+        LoginActivityView().setContentView(this)
+        init()
+    }
+
+    override fun init() {
+//        setActionBar()
+        changeFragment(SplashFragment.newInstance(), false)
+//        replaceFragment(MenuFragment.newInstance(), R.id.leftContainer)
     }
 }
 
-class LoginActivityUi : AnkoComponent<LoginActivity>, AnkoLogger {
-    override fun createView(ui: AnkoContext<LoginActivity>): View = with(ui) {
-        verticalLayout {
-            padding = dip(16)
-            backgroundColor = ContextCompat.getColor(context, R.color.background)
+class LoginActivityView : BBaseUi<LoginActivity>() {
+    override fun initView(ui: AnkoContext<LoginActivity>): View = ui.apply {
+        drawerLayout {
+            id = R.id.drawer
             lparams(width = matchParent, height = matchParent)
 
-            bTextView().apply {
-                bFont = Constant.TextType.Bold
-                text = resources.getString(R.string.app_name)
+            linearLayout {
                 lparams(width = matchParent, height = matchParent)
-                gravity = Gravity.CENTER
-                textSize = 32.toFloat()
-                textColor = ContextCompat.getColor(context, R.color.white)
+                orientation = LinearLayout.VERTICAL
+
+                bToolbar().apply {
+                    lparams(weight = matchParent.toFloat(), height = wrapContent)
+                    id = R.id.toolbar
+                    setContentInsetsRelative(0, 0)
+                }
+
+                frameLayout {
+                    lparams(width = matchParent, height = matchParent)
+                    id = R.id.fragmentContainer
+                }
+
             }
         }
-    }
-
+    }.view
 }
